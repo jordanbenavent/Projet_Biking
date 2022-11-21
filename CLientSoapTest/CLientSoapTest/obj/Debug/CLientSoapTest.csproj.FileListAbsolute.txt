@@ -1,0 +1,8 @@
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\bin\Debug\CLientSoapTest.exe.config
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\bin\Debug\CLientSoapTest.exe
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\bin\Debug\CLientSoapTest.pdb
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\obj\Debug\CLientSoapTest.csproj.AssemblyReference.cache
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\obj\Debug\CLientSoapTest.csproj.SuggestedBindingRedirects.cache
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\obj\Debug\CLientSoapTest.csproj.CoreCompileInputs.cache
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\obj\Debug\CLientSoapTest.exe
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\CLientSoapTest\CLientSoapTest\obj\Debug\CLientSoapTest.pdb
