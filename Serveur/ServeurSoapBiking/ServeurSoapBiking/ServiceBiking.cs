@@ -96,10 +96,8 @@ namespace ServeurSoapBiking
             {
             Task<Adress> departAdress = getAdress(departure);
             Task<Adress> arrivalAdress = getAdress(arrival);
-            Position position = new Position(); position.coordinates = new double[2]; position.coordinates[0] = 8; position.coordinates[1] = 49;
-            Position position2 = new Position(); position2.coordinates = new double[2]; position2.coordinates[0] = 7; position2.coordinates[1] = 49;
-            string result = getRouting(position, position2).Result;
-            return result + "test";
+            string result = getRouting(departAdress.Result.features[0].geometry, arrivalAdress.Result.features[0].geometry).Result;
+            return result;
             }
 
             static async Task<Adress> getAdress(string adress)
@@ -121,22 +119,42 @@ namespace ServeurSoapBiking
 
             static async Task<string> getRouting(Position start, Position end)
             {
+            string responseBody;
+            string request = "https://api.openrouteservice.org/v2/directions/foot-walking?" + "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440" + "&start=" + start.getLongitudeString() +',' + start.getLattitudeString()+ "&end=" + end.getLongitudeString() +","+ end.getLattitudeString();
             try
             {
                 
                 HttpResponseMessage responseContract = await Program.client.GetAsync("https://api.openrouteservice.org/v2/directions/foot-walking?" + "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440" + "&start=" + start.getLongitudeString() +',' + start.getLattitudeString()+ "&end=" + end.getLongitudeString() +","+ end.getLattitudeString());
                 Console.WriteLine(responseContract);
                 responseContract.EnsureSuccessStatusCode();
-                string responseBody = await responseContract.Content.ReadAsStringAsync();
-                return responseBody;
+                responseBody = await responseContract.Content.ReadAsStringAsync();
                 
             }
             catch (Exception e)
             {
-
+                return e.Message + request;
             }
-            return "start : " + start.coordinates[0] + " " + start.coordinates[1]; ;
-        }
+            Routing result = JsonSerializer.Deserialize<Routing>(responseBody);
+            return result.features[0].properties.segments[0].steps[0].instruction;
+            }
+
+            static async Task<Place> getAdressV2(string adress)
+            {
+                try
+                {
+                    HttpResponseMessage responseContract = await Program.client.GetAsync("https://nominatim.openstreetmap.org/search?q="+adress+"&format=json&polygon=1&addressdetails=1");
+                    Console.WriteLine(responseContract);
+                    responseContract.EnsureSuccessStatusCode();
+                    string responseBody = await responseContract.Content.ReadAsStringAsync();
+                    Place result = JsonSerializer.Deserialize<Place>(responseBody);
+                    return result;
+                }
+                catch (Exception e)
+                {
+
+                }
+                return null;
+            }
         }
 
 

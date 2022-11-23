@@ -73,6 +73,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Routing.cs" />
+    <Compile Include="Place.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="IServiceBiking.cs" />
     <Compile Include="Program.cs" />

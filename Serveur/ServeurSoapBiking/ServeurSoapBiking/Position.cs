@@ -6,14 +6,14 @@
 
         public string getLongitudeString()
         {
-            int partEnt = (int)coordinates[0];
-            return partEnt + "." + (coordinates[0] * 10000) % (partEnt * 10000);
+            string longitude = coordinates[0].ToString();
+            return longitude.Replace(',', '.');
         }
 
         public string getLattitudeString()
         {
-            int partEnt = (int)coordinates[1];
-            return partEnt + "." + (coordinates[1] * 10000) % (partEnt * 10000);
+            string lattitude = coordinates[1].ToString();
+            return lattitude.Replace(',', '.');
         }
     }
 }
