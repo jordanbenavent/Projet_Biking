@@ -78,6 +78,8 @@ namespace ServeurSoapBiking
         
         public class ServiceBiking : IServiceBiking
         {
+            
+            public MQ MyQueue = new MQ();
 
             public CompositeType GetDataUsingDataContract(CompositeType composite)
             {
@@ -97,10 +99,10 @@ namespace ServeurSoapBiking
             Task<Adress> departAdress = getAdress(departure);
             Task<Adress> arrivalAdress = getAdress(arrival);
             string result = getRouting(departAdress.Result.features[0].geometry, arrivalAdress.Result.features[0].geometry).Result;
-            return result;
+            return departAdress.Result.GetCity();
             }
 
-            static async Task<Adress> getAdress(string adress)
+            public static async Task<Adress> getAdress(string adress)
             {   
                 try
                 {   
@@ -135,10 +137,17 @@ namespace ServeurSoapBiking
                 return e.Message + request;
             }
             Routing result = JsonSerializer.Deserialize<Routing>(responseBody);
-            return result.features[0].properties.segments[0].steps[0].instruction;
+            List<string> instructions = new List<string>();
+            foreach(Step step in result.features[0].properties.segments[0].steps)
+            {
+                instructions.Add(step.instruction);
+            }
+            MQ queue = new MQ();
+            queue.PushOnQueue(instructions);
+            return JsonSerializer.Serialize(instructions);
             }
 
-            static async Task<Place> getAdressV2(string adress)
+            public async Task<Place> getAdressV2(string adress)
             {
                 try
                 {

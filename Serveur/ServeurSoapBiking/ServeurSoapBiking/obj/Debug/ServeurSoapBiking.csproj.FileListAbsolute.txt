@@ -24,3 +24,8 @@ D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBi
 D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\obj\Debug\ServeurSoapBiking.csproj.CopyComplete
 D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\obj\Debug\ServeurSoapBiking.dll
 D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\obj\Debug\ServeurSoapBiking.pdb
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\bin\Debug\Apache.NMS.ActiveMQ.dll
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\bin\Debug\Apache.NMS.dll
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\bin\Debug\ICSharpCode.SharpZipLib.pdb
+D:\Bureau\SI_Nice\S7\Middleware\Projet_final\Projet_Biking\Serveur\ServeurSoapBiking\ServeurSoapBiking\bin\Debug\ICSharpCode.SharpZipLib.xml
