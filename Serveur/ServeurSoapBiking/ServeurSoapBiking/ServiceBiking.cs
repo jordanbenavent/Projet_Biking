@@ -20,6 +20,11 @@ namespace ServeurSoapBiking
 
         public List<Feature> features { get; set; }
 
+        public bool Is_Empty()
+        {
+            return features.Count == 0;
+        }
+
         public string ToString()
         {
             return path + " " + city + " " + postalCode + features[0].properties.locality;
@@ -80,6 +85,7 @@ namespace ServeurSoapBiking
         {
             
             public MQ MyQueue = new MQ();
+            private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
 
             public CompositeType GetDataUsingDataContract(CompositeType composite)
             {
@@ -98,11 +104,18 @@ namespace ServeurSoapBiking
             {
             Task<Adress> departAdress = getAdress(departure);
             Task<Adress> arrivalAdress = getAdress(arrival);
-            string result = getRouting(departAdress.Result.features[0].geometry, arrivalAdress.Result.features[0].geometry).Result;
-            return departAdress.Result.GetCity();
+            if(departAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse de depart."; }
+            if(arrivalAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse d'arrivée."; }
+            
+            Task<Routing> routingwalking = getRouting(departAdress.Result.features[0].geometry, arrivalAdress.Result.features[0].geometry, "foot-walking?");
+            //possible autre routing
+            if(routingwalking.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire"; }
+            double duration = routingwalking.Result.features[0].properties.segments[0].duration;
+            string directions = getDirections(routingwalking.Result);
+            return directions;
             }
 
-            public static async Task<Adress> getAdress(string adress)
+        public static async Task<Adress> getAdress(string adress)
             {   
                 try
                 {   
@@ -114,40 +127,43 @@ namespace ServeurSoapBiking
                     return result;
                 } catch (Exception e)
                 {
-
-                }
                 return null;
+                }
             }
 
-            static async Task<string> getRouting(Position start, Position end)
+            async Task<Routing> getRouting(Position start, Position end, string typeTransport)
             {
             string responseBody;
-            string request = "https://api.openrouteservice.org/v2/directions/foot-walking?" + "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440" + "&start=" + start.getLongitudeString() +',' + start.getLattitudeString()+ "&end=" + end.getLongitudeString() +","+ end.getLattitudeString();
+            string request = "https://api.openrouteservice.org/v2/directions/"+typeTransport + apiKeyORS  + "&start=" + start.getLongitudeString() +',' + start.getLattitudeString()+ "&end=" + end.getLongitudeString() +","+ end.getLattitudeString();
             try
             {
                 
-                HttpResponseMessage responseContract = await Program.client.GetAsync("https://api.openrouteservice.org/v2/directions/foot-walking?" + "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440" + "&start=" + start.getLongitudeString() +',' + start.getLattitudeString()+ "&end=" + end.getLongitudeString() +","+ end.getLattitudeString());
-                Console.WriteLine(responseContract);
-                responseContract.EnsureSuccessStatusCode();
-                responseBody = await responseContract.Content.ReadAsStringAsync();
+                HttpResponseMessage responseRounting = await Program.client.GetAsync(request);
+                Console.WriteLine(responseRounting);
+                responseRounting.EnsureSuccessStatusCode();
+                responseBody = await responseRounting.Content.ReadAsStringAsync();
                 
             }
             catch (Exception e)
             {
-                return e.Message + request;
+                return null;
             }
             Routing result = JsonSerializer.Deserialize<Routing>(responseBody);
+            return result;
+            }
+
+        private string getDirections(Routing result)
+        {
             List<string> instructions = new List<string>();
-            foreach(Step step in result.features[0].properties.segments[0].steps)
+            foreach (Step step in result.features[0].properties.segments[0].steps)
             {
                 instructions.Add(step.instruction);
             }
-            MQ queue = new MQ();
-            queue.PushOnQueue(instructions);
+            //MyQueue.PushOnQueue(instructions); //faux lancer activemq
             return JsonSerializer.Serialize(instructions);
-            }
+        }
 
-            public async Task<Place> getAdressV2(string adress)
+        public async Task<Place> getAdressV2(string adress)
             {
                 try
                 {
