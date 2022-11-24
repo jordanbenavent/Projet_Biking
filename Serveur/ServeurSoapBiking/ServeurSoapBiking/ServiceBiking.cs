@@ -159,7 +159,7 @@ namespace ServeurSoapBiking
             {
                 instructions.Add(step.instruction);
             }
-            //MyQueue.PushOnQueue(instructions); //faux lancer activemq
+            MyQueue.PushOnQueue(instructions); //faux lancer activemq
             return JsonSerializer.Serialize(instructions);
         }
 
