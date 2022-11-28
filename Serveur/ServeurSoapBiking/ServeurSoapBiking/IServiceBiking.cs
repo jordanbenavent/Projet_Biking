@@ -15,6 +15,9 @@ namespace ServeurSoapBiking
         string getRoute(string departure, string arrival);
 
         [OperationContract]
+        bool NextStep(string queue);
+
+        [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
 
         // TODO: ajoutez vos opérations de service ici

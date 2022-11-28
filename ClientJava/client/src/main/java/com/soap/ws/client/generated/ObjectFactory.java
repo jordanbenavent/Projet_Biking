@@ -53,6 +53,7 @@ public class ObjectFactory {
     private final static QName _GetRouteDeparture_QNAME = new QName("http://tempuri.org/", "departure");
     private final static QName _GetRouteArrival_QNAME = new QName("http://tempuri.org/", "arrival");
     private final static QName _GetRouteResponseGetRouteResult_QNAME = new QName("http://tempuri.org/", "getRouteResult");
+    private final static QName _NextStepQueue_QNAME = new QName("http://tempuri.org/", "queue");
     private final static QName _GetDataUsingDataContractComposite_QNAME = new QName("http://tempuri.org/", "composite");
     private final static QName _GetDataUsingDataContractResponseGetDataUsingDataContractResult_QNAME = new QName("http://tempuri.org/", "GetDataUsingDataContractResult");
     private final static QName _CompositeTypeStringValue_QNAME = new QName("http://schemas.datacontract.org/2004/07/ServeurSoapBiking", "StringValue");
@@ -78,6 +79,22 @@ public class ObjectFactory {
      */
     public GetRouteResponse createGetRouteResponse() {
         return new GetRouteResponse();
+    }
+
+    /**
+     * Create an instance of {@link NextStep }
+     * 
+     */
+    public NextStep createNextStep() {
+        return new NextStep();
+    }
+
+    /**
+     * Create an instance of {@link NextStepResponse }
+     * 
+     */
+    public NextStepResponse createNextStepResponse() {
+        return new NextStepResponse();
     }
 
     /**
@@ -427,6 +444,19 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://tempuri.org/", name = "getRouteResult", scope = GetRouteResponse.class)
     public JAXBElement<String> createGetRouteResponseGetRouteResult(String value) {
         return new JAXBElement<String>(_GetRouteResponseGetRouteResult_QNAME, String.class, GetRouteResponse.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://tempuri.org/", name = "queue", scope = NextStep.class)
+    public JAXBElement<String> createNextStepQueue(String value) {
+        return new JAXBElement<String>(_NextStepQueue_QNAME, String.class, NextStep.class, value);
     }
 
     /**

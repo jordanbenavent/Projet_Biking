@@ -37,6 +37,7 @@ namespace ServeurSoapBiking
 
     public class Step
     {
+        public int id { get; set; }
         public double distance { get; set; }
         public double duration { get; set; }
         public string instruction { get; set; }

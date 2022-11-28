@@ -1,3 +1,4 @@
+
 package com.soap.ws.client.generated;
 
 import java.net.MalformedURLException;

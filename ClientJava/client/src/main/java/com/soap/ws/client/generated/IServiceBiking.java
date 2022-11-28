@@ -42,6 +42,20 @@ public interface IServiceBiking {
 
     /**
      * 
+     * @param queue
+     * @return
+     *     returns java.lang.Boolean
+     */
+    @WebMethod(operationName = "NextStep", action = "http://tempuri.org/IServiceBiking/NextStep")
+    @WebResult(name = "NextStepResult", targetNamespace = "http://tempuri.org/")
+    @RequestWrapper(localName = "NextStep", targetNamespace = "http://tempuri.org/", className = "com.soap.ws.client.generated.NextStep")
+    @ResponseWrapper(localName = "NextStepResponse", targetNamespace = "http://tempuri.org/", className = "com.soap.ws.client.generated.NextStepResponse")
+    public Boolean nextStep(
+        @WebParam(name = "queue", targetNamespace = "http://tempuri.org/")
+        String queue);
+
+    /**
+     * 
      * @param composite
      * @return
      *     returns com.soap.ws.client.generated.CompositeType
