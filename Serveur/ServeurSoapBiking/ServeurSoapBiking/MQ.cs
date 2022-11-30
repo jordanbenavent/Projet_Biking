@@ -12,7 +12,17 @@ namespace ServeurSoapBiking
     public class MQ
     {
 
-        public void PushOnQueue(List<string> instructions) {
+        public List<Step> steps;
+        public string nomQueue;
+        public int lastPush = 0;
+
+        public MQ(string name, List<Step> steps)
+        {
+            this.nomQueue = name;
+            this.steps = steps;
+        }
+
+        public void PushOnQueue() {
             Uri connecturi = new Uri("activemq:tcp://localhost:61616");
             ConnectionFactory connectionFactory = new ConnectionFactory(connecturi);
 
@@ -24,7 +34,7 @@ namespace ServeurSoapBiking
             ISession session = connection.CreateSession();
 
             // Use the session to target a queue.
-            IDestination destination = session.GetQueue("QueueServiceBiking");
+            IDestination destination = session.GetQueue(nomQueue);
 
             // Create a Producer targetting the selected queue.
             IMessageProducer producer = session.CreateProducer(destination);
@@ -33,15 +43,20 @@ namespace ServeurSoapBiking
             producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
 
             // Finally, to send messages:
+            /*
             foreach(string instruction in instructions)
             {
-                ITextMessage message = session.CreateTextMessage(instruction);
+                ITextMessage message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
                 producer.Send(message);
-            }
-           
+            }*/
+            ITextMessage message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
+            producer.Send(message);
+            lastPush++;
+
 
             Console.WriteLine("Message sent, check ActiveMQ web interface to confirm.");
             Console.ReadLine();
+
 
             // Don't forget to close your session and connection when finished.
             session.Close();

@@ -84,7 +84,9 @@ namespace ServeurSoapBiking
         public class ServiceBiking : IServiceBiking
         {
             
-            public MQ MyQueue = new MQ();
+            public static List<MQ> ListOfQueues = new List<MQ>();
+            public string nomQueueStandard = "QueueServiceBiking";
+            public static int nbQueue = 0;
             private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
 
             public CompositeType GetDataUsingDataContract(CompositeType composite)
@@ -112,7 +114,34 @@ namespace ServeurSoapBiking
             if(routingwalking.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire"; }
             double duration = routingwalking.Result.features[0].properties.segments[0].duration;
             string directions = getDirections(routingwalking.Result);
+
             return directions;
+            }
+
+            public bool NextStep(string queue)
+            {
+            MQ userQueue = getQueue(queue);
+            if(userQueue == null) { return true; }
+            
+            if(userQueue.steps.Count == userQueue.lastPush)
+            {
+                return false;
+            }
+            userQueue.PushOnQueue();
+            return true;
+            
+            }
+
+            private MQ getQueue(string userqueue)
+            {
+                foreach(MQ queue in ListOfQueues)
+                {
+                if (queue.nomQueue.Equals(userqueue))
+                {
+                    return queue;
+                }
+                }
+            return null;
             }
 
         public static async Task<Adress> getAdress(string adress)
@@ -149,18 +178,29 @@ namespace ServeurSoapBiking
                 return null;
             }
             Routing result = JsonSerializer.Deserialize<Routing>(responseBody);
+            int id = 1;
+            foreach (Step step in result.features[0].properties.segments[0].steps)
+            {
+                step.id = id;
+                id++;
+            }
             return result;
             }
 
         private string getDirections(Routing result)
         {
             List<string> instructions = new List<string>();
+            ListOfQueues.Add(new MQ(nomQueueStandard + nbQueue, result.features[0].properties.segments[0].steps));
+            nbQueue++;
+            /*
             foreach (Step step in result.features[0].properties.segments[0].steps)
             {
+                MyQueue.PushOnQueue(result.features[0].properties.segments[0].steps, step.id);
                 instructions.Add(step.instruction);
-            }
-            MyQueue.PushOnQueue(instructions); //faux lancer activemq
-            return JsonSerializer.Serialize(instructions);
+            }*/
+            //MyQueue.PushOnQueue(result.features[0].properties.segments[0].steps, id); //faux lancer activemq
+            NextStep(ListOfQueues[ListOfQueues.Count-1].nomQueue);
+            return ListOfQueues[ListOfQueues.Count - 1].nomQueue;
         }
 
         public async Task<Place> getAdressV2(string adress)
