@@ -9,17 +9,42 @@ using Apache.NMS.ActiveMQ;
 
 namespace ServeurSoapBiking
 {
+    public enum StatusRouting
+    {
+        WALKING=0, BIKING=1
+    }
     public class MQ
     {
 
         public List<Step> steps;
+        public List<Step> stepsWalkingDeparture;
+        public List<Step> stepsBiking;
+        public List<Step> stepsWalkingArrival;
+        public StatusRouting status = StatusRouting.WALKING;
         public string nomQueue;
-        public int lastPush = 0;
+        public int lastPushWalkingDeparture = 0;
+        public int lastPushBiking = 0;
+        public int lastPushWalkingArrival = 0;
 
         public MQ(string name, List<Step> steps)
         {
             this.nomQueue = name;
-            this.steps = steps;
+            this.stepsWalkingDeparture = new List<Step>();
+            this.stepsWalkingDeparture.Add(new Step("You Will only walk"));
+            this.stepsWalkingDeparture.AddRange(steps);
+            this.stepsBiking = new List<Step>();
+            this.stepsWalkingArrival = new List<Step>();   
+        }
+
+        public MQ(string name, List<Step> steps1, List<Step> steps2, List<Step> steps3)
+        {
+            this.nomQueue = name;
+            this.stepsWalkingDeparture = steps1;
+            this.stepsWalkingDeparture.Add(new Step("Now you pick up a bike"));
+            this.stepsBiking = steps2;
+            this.stepsBiking.Add(new Step("Now you drop off a bike"));
+            this.stepsWalkingArrival = steps3;
+            this.stepsWalkingArrival.Add(new Step("Now you are arrived"));
         }
 
         public void PushOnQueue() {
@@ -49,9 +74,9 @@ namespace ServeurSoapBiking
                 ITextMessage message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
                 producer.Send(message);
             }*/
-            ITextMessage message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
+            ITextMessage message = getMessage(session);
+            //message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
             producer.Send(message);
-            lastPush++;
 
 
             Console.WriteLine("Message sent, check ActiveMQ web interface to confirm.");
@@ -62,6 +87,46 @@ namespace ServeurSoapBiking
             session.Close();
             connection.Close();
         }
-        
+
+        public bool IsDone()
+        {
+            if(stepsBiking.Count == 0 && stepsWalkingArrival.Count == 0)
+            {
+                return lastPushWalkingDeparture == stepsWalkingDeparture.Count;
+            } else
+            {
+                return lastPushWalkingArrival == stepsWalkingArrival.Count;
+            }
+        }
+
+        private ITextMessage getMessage(ISession session)
+        {
+            ITextMessage message;
+            if(stepsBiking.Count == 0 && stepsWalkingArrival.Count == 0)
+            {
+                message = session.CreateTextMessage(stepsWalkingDeparture[lastPushWalkingDeparture].id + " : " + stepsWalkingDeparture[lastPushWalkingDeparture].instruction);
+                lastPushWalkingDeparture++;
+                return message;
+            }
+            if (lastPushWalkingDeparture < stepsWalkingDeparture.Count)
+            {
+                message = session.CreateTextMessage(stepsWalkingDeparture[lastPushWalkingDeparture].id + " : " + stepsWalkingDeparture[lastPushWalkingDeparture].instruction);
+                lastPushWalkingDeparture++;
+            }
+            else if (lastPushBiking < stepsBiking.Count)
+            {
+                status = StatusRouting.BIKING;
+                message = session.CreateTextMessage(stepsBiking[lastPushBiking].id + " : " + stepsBiking[lastPushBiking].instruction);
+                lastPushBiking++;
+
+            }
+            else
+            {
+                status = StatusRouting.WALKING;
+                message = session.CreateTextMessage(stepsWalkingArrival.Count+ "  " + stepsWalkingArrival[lastPushWalkingArrival].id + " : " + stepsWalkingArrival[lastPushWalkingArrival].instruction);
+                lastPushWalkingArrival++;
+            }
+            return message;
+        }
     }
 }

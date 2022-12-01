@@ -103,12 +103,15 @@ namespace ServeurSoapBiking
             if(arrivalAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse d'arrivée."; }
             Task<Position> positionDepartStation = getPositionOfStationClosteToLocalisation(departAdress);
             Task<Position> positionArrivalStation = getPositionOfStationClosteToLocalisation(arrivalAdress);
+
+            Task<Routing> routingwalkingonly = getRouting(departAdress.Result.features[0].geometry, arrivalAdress.Result.features[0].geometry, "foot-walking?");
             // Itinéraire n°1, départ - station de départ
             Task<Routing> routingwalkingdepart = getRouting(departAdress.Result.features[0].geometry, positionDepartStation.Result, "foot-walking?");
             // Itinéraire n°2, station de départ - station d'arrivée
             Task<Routing> routingbiking = getRouting(positionDepartStation.Result, positionArrivalStation.Result, "cycling-road?");
             // Itinéraire n°3, station d'arrivée - arrivée
             Task<Routing> routingwalkingarrival = getRouting(positionArrivalStation.Result, arrivalAdress.Result.features[0].geometry, "foot-walking?");
+            if (routingwalkingonly.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : départ - arrivée à pied"; }
             if (routingwalkingdepart.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : départ - station de départ"; }
             if (routingbiking.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : station de départ - station d'arrivée"; }
             if (routingwalkingarrival.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : station d'arrivée - arrivée"; }
@@ -116,9 +119,18 @@ namespace ServeurSoapBiking
             double durationJCDecaux = routingwalkingdepart.Result.features[0].properties.segments[0].duration
                             + routingbiking.Result.features[0].properties.segments[0].duration
                             + routingwalkingarrival.Result.features[0].properties.segments[0].duration;
-            string directions = getDirections(routingwalkingdepart.Result)
-                              + getDirections(routingbiking.Result) 
-                              + getDirections(routingwalkingarrival.Result);
+            double durationWalkingOnly = routingwalkingonly.Result.features[0].properties.segments[0].duration;
+            List<Routing> routing = new List<Routing>();
+            if (durationWalkingOnly < durationJCDecaux)
+            {
+                routing.Add(routingwalkingonly.Result);
+            }else
+            {
+                routing.Add(routingwalkingdepart.Result);
+                routing.Add(routingbiking.Result);
+                routing.Add(routingwalkingarrival.Result);
+            }
+            string directions = getDirections(routing);
             return directions;
             }
 
@@ -127,7 +139,7 @@ namespace ServeurSoapBiking
             MQ userQueue = getQueue(queue);
             if(userQueue == null) { return true; }
             
-            if(userQueue.steps.Count == userQueue.lastPush)
+            if(userQueue.IsDone())
             {
                 return false;
             }
@@ -195,18 +207,28 @@ namespace ServeurSoapBiking
             
         }
 
-        private string getDirections(Routing result)
+        private string getDirections(List<Routing> result)
         {
             List<string> instructions = new List<string>();
-            ListOfQueues.Add(new MQ(nomQueueStandard + nbQueue, result.features[0].properties.segments[0].steps));
-            nbQueue++;
-            /*
-            foreach (Step step in result.features[0].properties.segments[0].steps)
+            List<Step> allSteps = new List<Step>();
+            for(int i=0; i< result.Count; i++)
             {
-                MyQueue.PushOnQueue(result.features[0].properties.segments[0].steps, step.id);
-                instructions.Add(step.instruction);
-            }*/
-            //MyQueue.PushOnQueue(result.features[0].properties.segments[0].steps, id); //faux lancer activemq
+                allSteps.AddRange(result[i].features[0].properties.segments[0].steps);
+            }
+            MQ queue; //= new MQ(nomQueueStandard + nbQueue, allSteps);
+            if (result.Count == 3)
+            {
+                queue = new MQ(nomQueueStandard + nbQueue, result[0].features[0].properties.segments[0].steps, result[1].features[0].properties.segments[0].steps, result[2].features[0].properties.segments[0].steps);
+                //queue.stepsWalkingDeparture = result[0].features[0].properties.segments[0].steps;
+                //queue.stepsBiking = result[1].features[0].properties.segments[0].steps;
+                //queue.stepsWalkingArrival = result[2].features[0].properties.segments[0].steps;
+            } else
+            {
+                queue = new MQ(nomQueueStandard + nbQueue, result[0].features[0].properties.segments[0].steps);
+            }
+            ListOfQueues.Add(queue);
+            nbQueue++;
+            
             NextStep(ListOfQueues[ListOfQueues.Count-1].nomQueue);
             return ListOfQueues[ListOfQueues.Count - 1].nomQueue;
         }
