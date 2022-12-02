@@ -11,7 +11,7 @@ namespace ServeurSoapBiking
 {
     public enum StatusRouting
     {
-        WALKING=0, BIKING=1
+        WALKING=0, BIKING=1, WALKING_END
     }
     public class MQ
     {
@@ -25,6 +25,9 @@ namespace ServeurSoapBiking
         public int lastPushWalkingDeparture = 0;
         public int lastPushBiking = 0;
         public int lastPushWalkingArrival = 0;
+        public Station departStation;
+        public Station arrivalStation;
+        public int nbStep = 0;
 
         public MQ(string name, List<Step> steps)
         {
@@ -36,7 +39,7 @@ namespace ServeurSoapBiking
             this.stepsWalkingArrival = new List<Step>();   
         }
 
-        public MQ(string name, List<Step> steps1, List<Step> steps2, List<Step> steps3)
+        public MQ(string name, List<Step> steps1, List<Step> steps2, List<Step> steps3, Station departStation, Station arrivalStation)
         {
             this.nomQueue = name;
             this.stepsWalkingDeparture = steps1;
@@ -45,6 +48,8 @@ namespace ServeurSoapBiking
             this.stepsBiking.Add(new Step("Now you drop off a bike"));
             this.stepsWalkingArrival = steps3;
             this.stepsWalkingArrival.Add(new Step("Now you are arrived"));
+            this.departStation = departStation;
+            this.arrivalStation = arrivalStation;   
         }
 
         public void PushOnQueue() {
@@ -77,6 +82,7 @@ namespace ServeurSoapBiking
             ITextMessage message = getMessage(session);
             //message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
             producer.Send(message);
+            nbStep++;
 
 
             Console.WriteLine("Message sent, check ActiveMQ web interface to confirm.");
@@ -122,11 +128,23 @@ namespace ServeurSoapBiking
             }
             else
             {
-                status = StatusRouting.WALKING;
+                status = StatusRouting.WALKING_END;
                 message = session.CreateTextMessage(stepsWalkingArrival.Count+ "  " + stepsWalkingArrival[lastPushWalkingArrival].id + " : " + stepsWalkingArrival[lastPushWalkingArrival].instruction);
                 lastPushWalkingArrival++;
             }
             return message;
         }
+
+        internal bool needRecalculateRouting()
+        {
+            if (nbStep == 3)
+            {
+                nbStep = 0;
+                return true;
+            }
+            return false;
+        }
     }
+
+
 }

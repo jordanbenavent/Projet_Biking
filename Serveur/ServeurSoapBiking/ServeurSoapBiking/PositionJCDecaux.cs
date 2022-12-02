@@ -12,6 +12,11 @@ namespace ServeurSoapBiking
         public double longitude { get; set;}
     }
 
+    public enum StatusStation
+    {
+        OPEN, CLOSE
+    }
+
     public class Station
     {
         public int number { get; set; }
@@ -19,5 +24,7 @@ namespace ServeurSoapBiking
         public string name { get; set; }
         public string address { get; set; }
         public PositionJCDecaux position { get; set; }
+
+        public string status { get; set; }
     }
 }

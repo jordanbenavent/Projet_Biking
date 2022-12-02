@@ -101,20 +101,32 @@ namespace ServeurSoapBiking
             Task<Adress> arrivalAdress = getAdress(arrival);
             if(departAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse de depart."; }
             if(arrivalAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse d'arrivée."; }
-            Task<Position> positionDepartStation = getPositionOfStationClosteToLocalisation(departAdress);
-            Task<Position> positionArrivalStation = getPositionOfStationClosteToLocalisation(arrivalAdress);
+            Task<Station> departStation = GetStationClosestToLocalisation(departAdress);
+            Task<Station> arrivalStation = GetStationClosestToLocalisation(arrivalAdress);
 
-            Task<Routing> routingwalkingonly = getRouting(departAdress.Result.features[0].geometry, arrivalAdress.Result.features[0].geometry, "foot-walking?");
+            Position positionDepartStation = getPosisitionOfStation(departStation.Result);
+            Position positionArrivalStation = getPosisitionOfStation(arrivalStation.Result);
+
+            List<Routing> routing = calculateAllRounting(departAdress.Result, arrivalAdress.Result, positionDepartStation, positionArrivalStation);
+            string directions = getDirections(routing, departStation.Result, arrivalStation.Result);
+            return directions;
+            }
+
+        private List<Routing> calculateAllRounting(Adress departAdress, Adress arrivalAdress, Position positionDepartStation, Position positionArrivalStation)
+        {
+            Task<Routing> routingwalkingonly = getRouting(departAdress.features[0].geometry, arrivalAdress.features[0].geometry, "foot-walking?");
             // Itinéraire n°1, départ - station de départ
-            Task<Routing> routingwalkingdepart = getRouting(departAdress.Result.features[0].geometry, positionDepartStation.Result, "foot-walking?");
+            Task<Routing> routingwalkingdepart = getRouting(departAdress.features[0].geometry, positionDepartStation, "foot-walking?");
             // Itinéraire n°2, station de départ - station d'arrivée
-            Task<Routing> routingbiking = getRouting(positionDepartStation.Result, positionArrivalStation.Result, "cycling-road?");
+            Task<Routing> routingbiking = getRouting(positionDepartStation, positionArrivalStation, "cycling-road?");
             // Itinéraire n°3, station d'arrivée - arrivée
-            Task<Routing> routingwalkingarrival = getRouting(positionArrivalStation.Result, arrivalAdress.Result.features[0].geometry, "foot-walking?");
+            Task<Routing> routingwalkingarrival = getRouting(positionArrivalStation, arrivalAdress.features[0].geometry, "foot-walking?");
+            /*
             if (routingwalkingonly.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : départ - arrivée à pied"; }
             if (routingwalkingdepart.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : départ - station de départ"; }
             if (routingbiking.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : station de départ - station d'arrivée"; }
             if (routingwalkingarrival.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : station d'arrivée - arrivée"; }
+            */
             //possible autre routing
             double durationJCDecaux = routingwalkingdepart.Result.features[0].properties.segments[0].duration
                             + routingbiking.Result.features[0].properties.segments[0].duration
@@ -124,31 +136,44 @@ namespace ServeurSoapBiking
             if (durationWalkingOnly < durationJCDecaux)
             {
                 routing.Add(routingwalkingonly.Result);
-            }else
+            }
+            else
             {
                 routing.Add(routingwalkingdepart.Result);
                 routing.Add(routingbiking.Result);
                 routing.Add(routingwalkingarrival.Result);
             }
-            string directions = getDirections(routing);
-            return directions;
-            }
+            return routing;
+        }
 
-            public bool NextStep(string queue)
+        private Position getPosisitionOfStation(Station stationProche)
+        {
+
+            // conversion positionJCDecaux -> position
+            Position pos = new Position();
+            pos.coordinates = new double[] { stationProche.position.longitude, stationProche.position.latitude };
+            return pos;
+        }
+
+        public bool NextStep(string queue)
             {
             MQ userQueue = getQueue(queue);
-            if(userQueue == null) { return true; }
+            if(userQueue == null) { return false; }
             
             if(userQueue.IsDone())
             {
                 return false;
+            }
+            if(userQueue.needRecalculateRouting())
+            {
+                recalculateRouting(userQueue);
             }
             userQueue.PushOnQueue();
             return true;
             
             }
 
-            private MQ getQueue(string userqueue)
+        private MQ getQueue(string userqueue)
             {
                 foreach(MQ queue in ListOfQueues)
                 {
@@ -207,7 +232,7 @@ namespace ServeurSoapBiking
             
         }
 
-        private string getDirections(List<Routing> result)
+        private string getDirections(List<Routing> result, Station departure, Station arrival)
         {
             List<string> instructions = new List<string>();
             List<Step> allSteps = new List<Step>();
@@ -218,7 +243,7 @@ namespace ServeurSoapBiking
             MQ queue; //= new MQ(nomQueueStandard + nbQueue, allSteps);
             if (result.Count == 3)
             {
-                queue = new MQ(nomQueueStandard + nbQueue, result[0].features[0].properties.segments[0].steps, result[1].features[0].properties.segments[0].steps, result[2].features[0].properties.segments[0].steps);
+                queue = new MQ(nomQueueStandard + nbQueue, result[0].features[0].properties.segments[0].steps, result[1].features[0].properties.segments[0].steps, result[2].features[0].properties.segments[0].steps, departure, arrival);
                 //queue.stepsWalkingDeparture = result[0].features[0].properties.segments[0].steps;
                 //queue.stepsBiking = result[1].features[0].properties.segments[0].steps;
                 //queue.stepsWalkingArrival = result[2].features[0].properties.segments[0].steps;
@@ -251,7 +276,7 @@ namespace ServeurSoapBiking
                 return null;
             }
 
-        public async Task<Position> getPositionOfStationClosteToLocalisation(Task<Adress> localisation)
+        public async Task<Station> GetStationClosestToLocalisation(Task<Adress> localisation)
         {
             
             try
@@ -280,11 +305,9 @@ namespace ServeurSoapBiking
                 
                 Station stationProche = JsonSerializer.Deserialize<Station>(responseStationProcheBody);
                 
-                // conversion positionJCDecaux -> position
-                Position pos = new Position();
-                pos.coordinates = new double[] { stationProche.position.longitude, stationProche.position.latitude };
+               
                 
-                return pos;
+                return stationProche;
             }
             catch (Exception e)
             {
@@ -330,7 +353,30 @@ namespace ServeurSoapBiking
             return chosenContract;
         }
 
- }
+        private void recalculateRouting(MQ userQueue)
+        {
+            if (userQueue.status.Equals(StatusRouting.WALKING))
+            {
+                this.recalculateAllRounting(userQueue);
+            }
+            else if (userQueue.status.Equals(StatusRouting.BIKING))
+            {
+                recalculateBikingRounting(userQueue);
+            }
+            //plus nécessaire de recalculer, l'utilisateur est à pied et proche du point d'arriver (discuter avec le prof)
+        }
+
+        private static void recalculateBikingRounting(MQ userQueue)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void recalculateAllRounting(MQ userQueue)
+        {
+            //Task<Adress> adressDepart = userQueue.stepsWalkingDeparture[userQueue.lastPushWalkingDeparture].
+            //List<Routing> routing = calculateAllRounting();
+        }
+    }
 
         
 
