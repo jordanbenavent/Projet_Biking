@@ -1,0 +1,2 @@
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\ProxySOAP\obj\Debug\ProxySOAP.csproj.AssemblyReference.cache
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\ProxySOAP\obj\Debug\ProxySOAP.csproj.CoreCompileInputs.cache
