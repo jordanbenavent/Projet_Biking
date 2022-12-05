@@ -23,7 +23,9 @@ public class Client implements javax.jms.MessageListener{
         String arrival = scanner.nextLine();
         ServiceBiking serviceBiking = new ServiceBiking();
         String queue = serviceBiking.getBasicHttpBindingIServiceBiking().getRoute(departure,arrival);
+        System.out.println(queue);
         configurer(queue);
+
         while(serviceBiking.getBasicHttpBindingIServiceBiking().nextStep(queue)){
             //recuperation des infos
 
@@ -51,7 +53,7 @@ public class Client implements javax.jms.MessageListener{
             connect.start(); // on peut activer la connection.
 
         } catch (javax.jms.JMSException jmse){
-            jmse.printStackTrace();
+            System.out.println(queue);
         }
     }
 

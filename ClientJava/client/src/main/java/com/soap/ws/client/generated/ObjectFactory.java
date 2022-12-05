@@ -28,7 +28,6 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _CompositeType_QNAME = new QName("http://schemas.datacontract.org/2004/07/ServeurSoapBiking", "CompositeType");
     private final static QName _AnyType_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/", "anyType");
     private final static QName _AnyURI_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/", "anyURI");
     private final static QName _Base64Binary_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/", "base64Binary");
@@ -54,9 +53,6 @@ public class ObjectFactory {
     private final static QName _GetRouteArrival_QNAME = new QName("http://tempuri.org/", "arrival");
     private final static QName _GetRouteResponseGetRouteResult_QNAME = new QName("http://tempuri.org/", "getRouteResult");
     private final static QName _NextStepQueue_QNAME = new QName("http://tempuri.org/", "queue");
-    private final static QName _GetDataUsingDataContractComposite_QNAME = new QName("http://tempuri.org/", "composite");
-    private final static QName _GetDataUsingDataContractResponseGetDataUsingDataContractResult_QNAME = new QName("http://tempuri.org/", "GetDataUsingDataContractResult");
-    private final static QName _CompositeTypeStringValue_QNAME = new QName("http://schemas.datacontract.org/2004/07/ServeurSoapBiking", "StringValue");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.soap.ws.client.generated
@@ -95,43 +91,6 @@ public class ObjectFactory {
      */
     public NextStepResponse createNextStepResponse() {
         return new NextStepResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetDataUsingDataContract }
-     * 
-     */
-    public GetDataUsingDataContract createGetDataUsingDataContract() {
-        return new GetDataUsingDataContract();
-    }
-
-    /**
-     * Create an instance of {@link CompositeType }
-     * 
-     */
-    public CompositeType createCompositeType() {
-        return new CompositeType();
-    }
-
-    /**
-     * Create an instance of {@link GetDataUsingDataContractResponse }
-     * 
-     */
-    public GetDataUsingDataContractResponse createGetDataUsingDataContractResponse() {
-        return new GetDataUsingDataContractResponse();
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CompositeType }{@code >}
-     * 
-     * @param value
-     *     Java instance representing xml element's value.
-     * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link CompositeType }{@code >}
-     */
-    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/ServeurSoapBiking", name = "CompositeType")
-    public JAXBElement<CompositeType> createCompositeType(CompositeType value) {
-        return new JAXBElement<CompositeType>(_CompositeType_QNAME, CompositeType.class, null, value);
     }
 
     /**
@@ -457,45 +416,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://tempuri.org/", name = "queue", scope = NextStep.class)
     public JAXBElement<String> createNextStepQueue(String value) {
         return new JAXBElement<String>(_NextStepQueue_QNAME, String.class, NextStep.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CompositeType }{@code >}
-     * 
-     * @param value
-     *     Java instance representing xml element's value.
-     * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link CompositeType }{@code >}
-     */
-    @XmlElementDecl(namespace = "http://tempuri.org/", name = "composite", scope = GetDataUsingDataContract.class)
-    public JAXBElement<CompositeType> createGetDataUsingDataContractComposite(CompositeType value) {
-        return new JAXBElement<CompositeType>(_GetDataUsingDataContractComposite_QNAME, CompositeType.class, GetDataUsingDataContract.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CompositeType }{@code >}
-     * 
-     * @param value
-     *     Java instance representing xml element's value.
-     * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link CompositeType }{@code >}
-     */
-    @XmlElementDecl(namespace = "http://tempuri.org/", name = "GetDataUsingDataContractResult", scope = GetDataUsingDataContractResponse.class)
-    public JAXBElement<CompositeType> createGetDataUsingDataContractResponseGetDataUsingDataContractResult(CompositeType value) {
-        return new JAXBElement<CompositeType>(_GetDataUsingDataContractResponseGetDataUsingDataContractResult_QNAME, CompositeType.class, GetDataUsingDataContractResponse.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}
-     * 
-     * @param value
-     *     Java instance representing xml element's value.
-     * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
-     */
-    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/ServeurSoapBiking", name = "StringValue", scope = CompositeType.class)
-    public JAXBElement<String> createCompositeTypeStringValue(String value) {
-        return new JAXBElement<String>(_CompositeTypeStringValue_QNAME, String.class, CompositeType.class, value);
     }
 
 }

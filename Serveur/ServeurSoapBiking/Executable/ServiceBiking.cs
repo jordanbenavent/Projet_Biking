@@ -11,9 +11,8 @@ using static System.Net.WebRequestMethods;
 using System.Device.Location;
 using System.Diagnostics.Contracts;
 using System.Web.Management;
-using System.Runtime.CompilerServices;
 
-namespace ServeurSoapBiking
+namespace Executable
 {
 
     public class Adress
@@ -37,7 +36,8 @@ namespace ServeurSoapBiking
 
         public string GetCity()
         {
-            foreach(Feature feature in features){
+            foreach (Feature feature in features)
+            {
                 return feature.properties.locality;
             }
             return "";
@@ -72,39 +72,27 @@ namespace ServeurSoapBiking
 
 
     // REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom de classe "Service1" à la fois dans le code et le fichier de configuration.
-    
-    
-        
-        public class ServiceBiking : IServiceBiking
-        {
+
+
+
+    public class ServiceBiking : IServiceBiking
+    {
 
         public static readonly HttpClient client = new HttpClient();
 
         public static List<MQ> ListOfQueues = new List<MQ>();
-            public string nomQueueStandard = "QueueServiceBiking";
-            public static int nbQueue = 0;
-            //private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
-            private string apiKeyORS = "api_key=5b3ce3597851110001cf62485cbfe0ea6a384b7c84c5fb1cdf8fc5a4";
+        public string nomQueueStandard = "QueueServiceBiking";
+        public static int nbQueue = 0;
+        //private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
+        private string apiKeyORS = "api_key=5b3ce3597851110001cf62485cbfe0ea6a384b7c84c5fb1cdf8fc5a4";
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-            {
-                if (composite == null)
-                {
-                    throw new ArgumentNullException("composite");
-                }
-                if (composite.BoolValue)
-                {
-                    composite.StringValue += "Suffix";
-                }
-                return composite;
-            }
 
-            public string getRoute(string departure, string arrival)
-            {
+        public string getRoute(string departure, string arrival)
+        {
             Task<Adress> departAdress = getAdress(departure);
             Task<Adress> arrivalAdress = getAdress(arrival);
-            if(departAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse de depart."; }
-            if(arrivalAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse d'arrivée."; }
+            if (departAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse de depart."; }
+            if (arrivalAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse d'arrivée."; }
             Task<Station> departStation = GetStationClosestToLocalisation(departAdress);
             Task<Station> arrivalStation = GetStationClosestToLocalisation(arrivalAdress);
 
@@ -114,7 +102,7 @@ namespace ServeurSoapBiking
             List<Routing> routing = calculateAllRounting(departAdress.Result, arrivalAdress.Result, positionDepartStation, positionArrivalStation);
             string directions = getDirections(routing, departStation.Result, arrivalStation.Result);
             return directions;
-            }
+        }
 
         private List<Routing> calculateAllRounting(Adress departAdress, Adress arrivalAdress, Position positionDepartStation, Position positionArrivalStation)
         {
@@ -160,70 +148,71 @@ namespace ServeurSoapBiking
         }
 
         public bool NextStep(string queue)
-            {
+        {
             MQ userQueue = getQueue(queue);
-            if(userQueue == null) { return false; }
-            
-            if(userQueue.IsDone())
+            if (userQueue == null) { return false; }
+
+            if (userQueue.IsDone())
             {
                 return false;
             }
-            if(userQueue.needRecalculateRouting())
+            if (userQueue.needRecalculateRouting())
             {
                 recalculateRouting(userQueue);
             }
             userQueue.PushOnQueue();
             return true;
-            
-            }
+
+        }
 
         private MQ getQueue(string userqueue)
+        {
+            foreach (MQ queue in ListOfQueues)
             {
-                foreach(MQ queue in ListOfQueues)
-                {
                 if (queue.nomQueue.Equals(userqueue))
                 {
                     return queue;
                 }
-                }
-            return null;
             }
+            return null;
+        }
 
-        public async Task<Adress> getAdress(string adress)
-        {   
+        public static async Task<Adress> getAdress(string adress)
+        {
             try
-            {   
-                HttpResponseMessage responseContract = await client.GetAsync("https://api.openrouteservice.org/geocode/search?" + apiKeyORS + "&text=" + adress);
+            {
+                HttpResponseMessage responseContract = await client.GetAsync("https://api.openrouteservice.org/geocode/search?" + "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440&text=" + adress);
                 Console.WriteLine(responseContract);
                 responseContract.EnsureSuccessStatusCode();
                 string responseBody = await responseContract.Content.ReadAsStringAsync();
                 Adress result = JsonSerializer.Deserialize<Adress>(responseBody);
                 return result;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-            return null;
+                return null;
             }
         }
 
         async Task<Routing> getRouting(Position start, Position end, string typeTransport)
         {
             string responseBody;
-            string request = "https://api.openrouteservice.org/v2/directions/"+typeTransport + apiKeyORS  + "&start=" + start.getLongitudeString() +',' + start.getLatitudeString()+ "&end=" + end.getLongitudeString() +","+ end.getLatitudeString();
-            
+            string request = "https://api.openrouteservice.org/v2/directions/" + typeTransport + apiKeyORS + "&start=" + start.getLongitudeString() + ',' + start.getLatitudeString() + "&end=" + end.getLongitudeString() + "," + end.getLatitudeString();
+
             try
             {
-                
+
                 HttpResponseMessage responseRounting = await client.GetAsync(request);
                 Console.WriteLine(responseRounting);
                 responseRounting.EnsureSuccessStatusCode();
                 responseBody = await responseRounting.Content.ReadAsStringAsync();
-                
+
             }
             catch (Exception e)
             {
                 return null;
             }
-     
+
             Routing result = JsonSerializer.Deserialize<Routing>(responseBody);
             int id = 1;
             foreach (Step step in result.features[0].properties.segments[0].steps)
@@ -232,56 +221,57 @@ namespace ServeurSoapBiking
                 id++;
             }
             return result;
-         
-            
+
+
         }
 
         private string getDirections(List<Routing> result, Station departure, Station arrival)
         {
             List<string> instructions = new List<string>();
             List<Step> allSteps = new List<Step>();
-            for(int i=0; i< result.Count; i++)
+            for (int i = 0; i < result.Count; i++)
             {
                 allSteps.AddRange(result[i].features[0].properties.segments[0].steps);
             }
             MQ queue; //= new MQ(nomQueueStandard + nbQueue, allSteps);
             if (result.Count == 3)
             {
-                queue = new MQ(nomQueueStandard + nbQueue, result[0], result[1], result[2] , departure, arrival);
+                queue = new MQ(nomQueueStandard + nbQueue, result[0], result[1], result[2], departure, arrival);
                 //queue.stepsWalkingDeparture = result[0].features[0].properties.segments[0].steps;
                 //queue.stepsBiking = result[1].features[0].properties.segments[0].steps;
                 //queue.stepsWalkingArrival = result[2].features[0].properties.segments[0].steps;
-            } else
+            }
+            else
             {
                 queue = new MQ(nomQueueStandard + nbQueue, result[0]);
             }
             ListOfQueues.Add(queue);
             nbQueue++;
-            NextStep(ListOfQueues[ListOfQueues.Count-1].nomQueue);
+            NextStep(ListOfQueues[ListOfQueues.Count - 1].nomQueue);
             return ListOfQueues[ListOfQueues.Count - 1].nomQueue;
         }
 
         public async Task<Place> getAdressV2(string adress)
+        {
+            try
             {
-                try
-                {
-                    HttpResponseMessage responseContract = await client.GetAsync("https://nominatim.openstreetmap.org/search?q="+adress+"&format=json&polygon=1&addressdetails=1");
-                    Console.WriteLine(responseContract);
-                    responseContract.EnsureSuccessStatusCode();
-                    string responseBody = await responseContract.Content.ReadAsStringAsync();
-                    Place result = JsonSerializer.Deserialize<Place>(responseBody);
-                    return result;
-                }
-                catch (Exception e)
-                {
-
-                }
-                return null;
+                HttpResponseMessage responseContract = await client.GetAsync("https://nominatim.openstreetmap.org/search?q=" + adress + "&format=json&polygon=1&addressdetails=1");
+                Console.WriteLine(responseContract);
+                responseContract.EnsureSuccessStatusCode();
+                string responseBody = await responseContract.Content.ReadAsStringAsync();
+                Place result = JsonSerializer.Deserialize<Place>(responseBody);
+                return result;
             }
+            catch (Exception e)
+            {
+
+            }
+            return null;
+        }
 
         public async Task<Station> GetStationClosestToLocalisation(Task<Adress> localisation)
         {
-            
+
             try
             {
                 string responseBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
@@ -305,11 +295,11 @@ namespace ServeurSoapBiking
                 }
 
                 string responseStationProcheBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v3/stations/" + numberproche + "?contract=" + chosenContract + "&apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
-                
+
                 Station stationProche = JsonSerializer.Deserialize<Station>(responseStationProcheBody);
-                
-               
-                
+
+
+
                 return stationProche;
             }
             catch (Exception e)
@@ -323,7 +313,7 @@ namespace ServeurSoapBiking
         {
             string city = localisation.Result.GetCity().ToLower();
             string chosenContract = "not found";
-            foreach(Contract contract1 in contracts)
+            foreach (Contract contract1 in contracts)
             {
                 if (city.Equals(contract1.name))
                 {
@@ -338,7 +328,7 @@ namespace ServeurSoapBiking
                 foreach (Contract contract1 in contracts)
                 {
                     Task<Adress> address = getAdress(contract1.name);
-                    if (address.Result!=null) 
+                    if (address.Result != null)
                     {
                         if (!(address.Result.Is_Empty()))
                         {
@@ -348,11 +338,11 @@ namespace ServeurSoapBiking
                                 distance = geoCoordinateOfLocalisation.GetDistanceTo(geoCoordinateOfTheContractCity);
                                 chosenContract = contract1.name;
                             }
-                        } 
+                        }
                     }
                 }
             }
-            
+
             return chosenContract;
         }
 
@@ -389,9 +379,9 @@ namespace ServeurSoapBiking
         }
     }
 
-        
 
-   
+
+
 
 
 

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServeurSoapBiking
+namespace Executable
 {
     public class PositionJCDecaux
     {
         public double latitude { get; set; }
-        public double longitude { get; set;}
+        public double longitude { get; set; }
     }
 
     public enum StatusStation

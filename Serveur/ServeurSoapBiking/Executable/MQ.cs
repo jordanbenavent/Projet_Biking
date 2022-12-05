@@ -7,11 +7,11 @@ using Apache.NMS;
 
 using Apache.NMS.ActiveMQ;
 
-namespace ServeurSoapBiking
+namespace Executable
 {
     public enum StatusRouting
     {
-        WALKING=0, BIKING=1, WALKING_END
+        WALKING = 0, BIKING = 1, WALKING_END
     }
     public class MQ
     {
@@ -39,7 +39,7 @@ namespace ServeurSoapBiking
             this.stepsWalkingDeparture.Add(new Step("You will only walk"));
             this.stepsWalkingDeparture.AddRange(routing.features[0].properties.segments[0].steps);
             this.stepsBiking = new List<Step>();
-            this.stepsWalkingArrival = new List<Step>();   
+            this.stepsWalkingArrival = new List<Step>();
         }
 
         public MQ(string name, Routing routing1, Routing routing2, Routing routing3, Station departStation, Station arrivalStation)
@@ -55,10 +55,11 @@ namespace ServeurSoapBiking
             this.stepsWalkingArrival = routing3.features[0].properties.segments[0].steps;
             this.stepsWalkingArrival.Add(new Step("Now you are arrived"));
             this.departStation = departStation;
-            this.arrivalStation = arrivalStation;   
+            this.arrivalStation = arrivalStation;
         }
 
-        public bool PushOnQueue() {
+        public bool PushOnQueue()
+        {
 
             try
             {
@@ -102,7 +103,8 @@ namespace ServeurSoapBiking
                 session.Close();
                 connection.Close();
                 return true;
-            } catch ( Exception e )
+            }
+            catch (Exception e)
             {
                 return false;
             }
@@ -110,10 +112,11 @@ namespace ServeurSoapBiking
 
         public bool IsDone()
         {
-            if(stepsBiking.Count == 0 && stepsWalkingArrival.Count == 0)
+            if (stepsBiking.Count == 0 && stepsWalkingArrival.Count == 0)
             {
                 return lastPushWalkingDeparture == stepsWalkingDeparture.Count;
-            } else
+            }
+            else
             {
                 return lastPushWalkingArrival == stepsWalkingArrival.Count;
             }
@@ -122,7 +125,7 @@ namespace ServeurSoapBiking
         private ITextMessage getMessage(ISession session)
         {
             ITextMessage message;
-            if(stepsBiking.Count == 0 && stepsWalkingArrival.Count == 0)
+            if (stepsBiking.Count == 0 && stepsWalkingArrival.Count == 0)
             {
                 message = session.CreateTextMessage(stepsWalkingDeparture[lastPushWalkingDeparture].id + " : " + stepsWalkingDeparture[lastPushWalkingDeparture].instruction);
                 lastPushWalkingDeparture++;
@@ -143,7 +146,7 @@ namespace ServeurSoapBiking
             else
             {
                 status = StatusRouting.WALKING_END;
-                message = session.CreateTextMessage(stepsWalkingArrival.Count+ "  " + stepsWalkingArrival[lastPushWalkingArrival].id + " : " + stepsWalkingArrival[lastPushWalkingArrival].instruction);
+                message = session.CreateTextMessage(stepsWalkingArrival.Count + "  " + stepsWalkingArrival[lastPushWalkingArrival].id + " : " + stepsWalkingArrival[lastPushWalkingArrival].instruction);
                 lastPushWalkingArrival++;
             }
             return message;

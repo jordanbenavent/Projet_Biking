@@ -54,18 +54,4 @@ public interface IServiceBiking {
         @WebParam(name = "queue", targetNamespace = "http://tempuri.org/")
         String queue);
 
-    /**
-     * 
-     * @param composite
-     * @return
-     *     returns com.soap.ws.client.generated.CompositeType
-     */
-    @WebMethod(operationName = "GetDataUsingDataContract", action = "http://tempuri.org/IServiceBiking/GetDataUsingDataContract")
-    @WebResult(name = "GetDataUsingDataContractResult", targetNamespace = "http://tempuri.org/")
-    @RequestWrapper(localName = "GetDataUsingDataContract", targetNamespace = "http://tempuri.org/", className = "com.soap.ws.client.generated.GetDataUsingDataContract")
-    @ResponseWrapper(localName = "GetDataUsingDataContractResponse", targetNamespace = "http://tempuri.org/", className = "com.soap.ws.client.generated.GetDataUsingDataContractResponse")
-    public CompositeType getDataUsingDataContract(
-        @WebParam(name = "composite", targetNamespace = "http://tempuri.org/")
-        CompositeType composite);
-
 }
