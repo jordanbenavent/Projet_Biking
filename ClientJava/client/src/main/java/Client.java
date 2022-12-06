@@ -28,7 +28,6 @@ public class Client implements javax.jms.MessageListener{
 
         while(serviceBiking.getBasicHttpBindingIServiceBiking().nextStep(queue)){
             //recuperation des infos
-
             try {
                 wait(1500);
             } catch (Exception e) {

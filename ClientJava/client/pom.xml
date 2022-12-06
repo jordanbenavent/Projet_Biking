@@ -51,7 +51,7 @@
         </executions>
         <configuration>
           <wsdlUrls>
-            <wsdlUrl>http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/?wsdl</wsdlUrl>
+            <wsdlUrl>http://localhost:8733/Design_Time_Addresses/ServeurBiking/Routing/?wsdl</wsdlUrl>
           </wsdlUrls>
           <keep>true</keep>
           <packageName>com.soap.ws.client.generated</packageName>

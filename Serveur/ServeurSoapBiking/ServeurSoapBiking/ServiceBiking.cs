@@ -86,18 +86,6 @@ namespace ServeurSoapBiking
             //private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
             private string apiKeyORS = "api_key=5b3ce3597851110001cf62485cbfe0ea6a384b7c84c5fb1cdf8fc5a4";
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-            {
-                if (composite == null)
-                {
-                    throw new ArgumentNullException("composite");
-                }
-                if (composite.BoolValue)
-                {
-                    composite.StringValue += "Suffix";
-                }
-                return composite;
-            }
 
             public string getRoute(string departure, string arrival)
             {
