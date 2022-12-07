@@ -141,7 +141,7 @@ namespace ServeurBikingExecutable
             else
             {
                 status = StatusRouting.WALKING_END;
-                message = session.CreateTextMessage(stepsWalkingArrival.Count + "  " + stepsWalkingArrival[lastPushWalkingArrival].id + " : " + stepsWalkingArrival[lastPushWalkingArrival].instruction + " in " + stepsWalkingArrival[lastPushWalkingArrival].distance + " meters.");
+                message = session.CreateTextMessage(stepsWalkingArrival[lastPushWalkingArrival].id + " : " + stepsWalkingArrival[lastPushWalkingArrival].instruction + " in " + stepsWalkingArrival[lastPushWalkingArrival].distance + " meters.");
                 lastPushWalkingArrival++;
             }
             return message;
