@@ -10,4 +10,6 @@
 * Un Client Java
 
 ## Lancement
-Lancez l'exécutable et entrez votre adresse de départ puis votre adresse d'arrivée (attention à ne pas écrire les accents)
+Lancez l'exécutable launch et entrez votre adresse de départ puis votre adresse d'arrivée (attention à ne pas écrire les accents)
+/!\ activemq doit être dans les variables d'environnement
+
