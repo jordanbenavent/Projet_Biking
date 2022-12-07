@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="9ec76603-9ef8-430b-8afe-a7832d342b67" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
-=======
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="c0c6cff1-50d1-401f-bdd9-5858b1b7fb17" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
->>>>>>> routingwithbike
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="07df1a47-bb20-4075-ade5-f01e68dcf36c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -23,24 +19,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-<<<<<<< HEAD
-    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/WcfServiceLibrary1/Service1/?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ServiceBiking.wsdl" MetadataType="Wsdl" ID="2443c559-a810-4640-aeb5-448f23c80a28" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/?wsdl" />
-    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="52153be6-66af-4bbf-9c27-edd126473c42" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/?xsd=xsd2" />
-    <MetadataFile FileName="item.disco" MetadataType="Disco" ID="32a13e2f-8ed2-45cf-a1de-f19d55f5acef" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/?disco" />
-    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="9ee3489c-757a-43d4-9a02-8dd387ead37a" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/?xsd=xsd0" />
-    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="55be5157-7137-4c40-816e-84fc12005625" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/?xsd=xsd1" />
-=======
-    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/mex" Protocol="mex" SourceId="1" />
-  </MetadataSources>
-  <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="7f062cb4-7080-4cf6-acd0-d7e5499c1fba" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="ff0fd35c-48bd-4438-a314-c5f902ac0120" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="4d6697ef-3b94-460b-8269-4e74651f6a5d" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/mex" />
-    <MetadataFile FileName="ServeurSoapBiking.xsd" MetadataType="Schema" ID="a13e036b-750f-4769-81a2-f0bfb8450ab2" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ServeurSoapBiking/Routing/mex" />
->>>>>>> routingwithbike
+    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="795fdb2f-f0a8-4e71-a670-7254388fedca" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/WcfServiceLibrary1/Service1/?xsd=xsd2" />
+    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="637bbbe1-347b-468b-a932-6ce4e35c3af8" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/WcfServiceLibrary1/Service1/?xsd=xsd0" />
+    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="06ca3944-f0f8-4af8-a795-bc8111180d82" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/WcfServiceLibrary1/Service1/?xsd=xsd1" />
+    <MetadataFile FileName="ServiceBiking.wsdl" MetadataType="Wsdl" ID="967442c7-e7e4-4b78-aa57-f83fc9a9d38e" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/WcfServiceLibrary1/Service1/?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServeurSoapBiking", "ServeurSoapBiking\ServeurSoapBiking.csproj", "{61E91885-3887-4218-90E0-1BC7E495EE5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServeurSoapBiking", "WcfServiceLibrary1\ServeurSoapBiking.csproj", "{77B9B8C3-285D-49A4-A22F-4ED4F66A3987}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{61E91885-3887-4218-90E0-1BC7E495EE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61E91885-3887-4218-90E0-1BC7E495EE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61E91885-3887-4218-90E0-1BC7E495EE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61E91885-3887-4218-90E0-1BC7E495EE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77B9B8C3-285D-49A4-A22F-4ED4F66A3987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B9B8C3-285D-49A4-A22F-4ED4F66A3987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77B9B8C3-285D-49A4-A22F-4ED4F66A3987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77B9B8C3-285D-49A4-A22F-4ED4F66A3987}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

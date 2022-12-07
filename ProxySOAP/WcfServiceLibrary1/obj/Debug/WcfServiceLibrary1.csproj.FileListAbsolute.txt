@@ -1,0 +1,7 @@
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\bin\Debug\WcfServiceLibrary1.dll.config
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\bin\Debug\WcfServiceLibrary1.dll
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\bin\Debug\WcfServiceLibrary1.pdb
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\obj\Debug\WcfServiceLibrary1.csproj.AssemblyReference.cache
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\obj\Debug\WcfServiceLibrary1.csproj.CoreCompileInputs.cache
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\obj\Debug\WcfServiceLibrary1.dll
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\ProxySOAP\WcfServiceLibrary1\obj\Debug\WcfServiceLibrary1.pdb

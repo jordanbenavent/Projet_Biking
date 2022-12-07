@@ -11,6 +11,7 @@ namespace CLientSoapTest
     {
         static void Main(string[] args)
         {
+
             ServiceBikingClient service = new ServiceBikingClient();
             Console.WriteLine("De où voulez-vous partir ?");
             // Place du Général-de-Gaulle, Rouen
