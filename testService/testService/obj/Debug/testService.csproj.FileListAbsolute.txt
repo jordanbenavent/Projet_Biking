@@ -1,0 +1,7 @@
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\bin\Debug\testService.dll.config
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\bin\Debug\testService.dll
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\bin\Debug\testService.pdb
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\obj\Debug\testService.csproj.AssemblyReference.cache
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\obj\Debug\testService.csproj.CoreCompileInputs.cache
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\obj\Debug\testService.dll
+C:\Users\33668\Desktop\SI4\Middleware\Projet_Biking\testService\testService\obj\Debug\testService.pdb

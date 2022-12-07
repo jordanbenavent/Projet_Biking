@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
@@ -11,19 +12,8 @@ namespace ProxySOAP
     // REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom de classe "Service1" à la fois dans le code et le fichier de configuration.
     public class Proxy : IProxy
     {
+        public static readonly HttpClient client = new HttpClient();
         GenericProxyCache<JCDecauxItem> cache = new GenericProxyCache<JCDecauxItem>();
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-        {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
-        }
 
         public string getResponse(string url)
         {
@@ -35,7 +25,7 @@ namespace ProxySOAP
         {
             try
             {
-                string responseBody = await Program.client.GetStringAsync(request);
+                string responseBody = await client.GetStringAsync(request);
                 return responseBody;
             }
             catch (Exception e)
@@ -48,7 +38,7 @@ namespace ProxySOAP
         // On n'utilise pas le cache pour une station précise car on la considère comme étant un élément dynamique, en effet la station peut être disponible en fonction du temps
         public string  getStation(int number, string chosenContract)
         {   
-            string responseStationProcheBody = getResponse("https://api.jcdecaux.com/vls/v3/stations/" + number + "?contract=" + chosenContract + "&apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+            string responseStationProcheBody = getResponse("https://api.jcdecaux.com/vls/v2/stations/" + number + "?contract=" + chosenContract + "&apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
             return responseStationProcheBody;  
         }
         

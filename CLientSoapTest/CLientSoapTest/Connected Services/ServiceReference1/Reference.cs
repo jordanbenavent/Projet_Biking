@@ -84,6 +84,12 @@ namespace CLientSoapTest.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceBiking/getRoute", ReplyAction="http://tempuri.org/IServiceBiking/getRouteResponse")]
         System.Threading.Tasks.Task<string> getRouteAsync(string departure, string arrival);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceBiking/NextStep", ReplyAction="http://tempuri.org/IServiceBiking/NextStepResponse")]
+        bool NextStep(string queue);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceBiking/NextStep", ReplyAction="http://tempuri.org/IServiceBiking/NextStepResponse")]
+        System.Threading.Tasks.Task<bool> NextStepAsync(string queue);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceBiking/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IServiceBiking/GetDataUsingDataContractResponse")]
         CLientSoapTest.ServiceReference1.CompositeType GetDataUsingDataContract(CLientSoapTest.ServiceReference1.CompositeType composite);
         
@@ -124,6 +130,14 @@ namespace CLientSoapTest.ServiceReference1 {
         
         public System.Threading.Tasks.Task<string> getRouteAsync(string departure, string arrival) {
             return base.Channel.getRouteAsync(departure, arrival);
+        }
+        
+        public bool NextStep(string queue) {
+            return base.Channel.NextStep(queue);
+        }
+        
+        public System.Threading.Tasks.Task<bool> NextStepAsync(string queue) {
+            return base.Channel.NextStepAsync(queue);
         }
         
         public CLientSoapTest.ServiceReference1.CompositeType GetDataUsingDataContract(CLientSoapTest.ServiceReference1.CompositeType composite) {

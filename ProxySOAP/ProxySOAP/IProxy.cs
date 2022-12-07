@@ -11,11 +11,15 @@ namespace ProxySOAP
     [ServiceContract]
     public interface IProxy
     {
-        [OperationContract]
-        string getResponse(string url);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        string getStation(int number, string chosenContract);
+
+        [OperationContract]
+        string getContracts();
+
+        [OperationContract]
+        string getAllStationsOfAContract(string chosenContract);
 
         // TODO: ajoutez vos opérations de service ici
     }

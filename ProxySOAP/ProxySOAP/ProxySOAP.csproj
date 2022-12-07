@@ -79,7 +79,6 @@
   <ItemGroup>
     <Compile Include="JCDecauxItem.cs" />
     <Compile Include="GenericProxyCache.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="IProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy.cs" />

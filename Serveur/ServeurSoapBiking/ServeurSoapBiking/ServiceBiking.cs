@@ -235,7 +235,8 @@ namespace ServeurSoapBiking
             try
             {
                 // on peut appeler le cache
-                string responseBody = await Program.client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+                //string responseBody = await Program.client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+                string responseBody = "";
                 Contract[] contracts = JsonSerializer.Deserialize<Contract[]>(responseBody);
                 string chosenContract = chooseContract(localisation, contracts);
                 // on peut appeler le cache
