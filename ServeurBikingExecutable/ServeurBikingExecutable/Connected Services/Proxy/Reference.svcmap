@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="ef9705b6-1b15-4eca-b56e-5f7bd039621b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/ProxySOAP/Proxy/?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="2bdd168e-fad0-4255-ae3c-e51418787a02" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ProxySOAP/Proxy/?xsd=xsd0" />
+    <MetadataFile FileName="Proxy.wsdl" MetadataType="Wsdl" ID="5e869bb6-634c-40a5-a6f1-311a5f343d7f" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ProxySOAP/Proxy/?wsdl" />
+    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="b87f284b-62d2-4332-a86a-cc42c2e3bf1c" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/ProxySOAP/Proxy/?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

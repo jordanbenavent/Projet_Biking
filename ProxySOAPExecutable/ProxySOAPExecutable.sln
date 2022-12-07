@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxySOAPExecutable", "ProxySOAPExecutable\ProxySOAPExecutable.csproj", "{D74EE043-9651-4E46-B934-252B3D44EEE5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D74EE043-9651-4E46-B934-252B3D44EEE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D74EE043-9651-4E46-B934-252B3D44EEE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D74EE043-9651-4E46-B934-252B3D44EEE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D74EE043-9651-4E46-B934-252B3D44EEE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {830F29DC-7BB1-4DD9-845B-5F4D991826CC}
+	EndGlobalSection
+EndGlobal

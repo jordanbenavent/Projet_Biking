@@ -15,7 +15,7 @@ public class Client implements javax.jms.MessageListener{
 
     private static final long DELAY = 100;
 
-    public synchronized void lauch(){
+    public synchronized void launch(){
         while(true) {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Saisissez adresse de départ");

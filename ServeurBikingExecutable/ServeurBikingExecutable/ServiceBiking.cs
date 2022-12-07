@@ -13,6 +13,7 @@ using System.Diagnostics.Contracts;
 using System.Web.Management;
 using System.Runtime.CompilerServices;
 using ServeurBikingExecutable;
+using ServeurBikingExecutable.Proxy;
 
 namespace ServeurBikingExecutable
 {
@@ -80,8 +81,8 @@ namespace ServeurBikingExecutable
     public class ServiceBiking : IServiceBiking
     {
 
+        public ProxyClient proxy = new ProxyClient();
         public static readonly HttpClient client = new HttpClient();
-
         public static List<MQ> ListOfQueues = new List<MQ>();
         public string nomQueueStandard = "QueueServiceBiking";
         public static int nbQueue = 0;
@@ -101,8 +102,8 @@ namespace ServeurBikingExecutable
                 return "Trajet Impossible, vous devez rester dans la même ville";
             }
 
-            Task<Station> departStation = GetStationClosestToLocalisation(departAdress);
-            Task<Station> arrivalStation = GetStationClosestToLocalisation(arrivalAdress);
+            Task<Station> departStation = GetStationClosestToLocalisation(departAdress, "departure");
+            Task<Station> arrivalStation = GetStationClosestToLocalisation(arrivalAdress, "arrival");
 
 
             Position positionDepartStation = getPosisitionOfStation(departStation.Result);
@@ -296,7 +297,7 @@ namespace ServeurBikingExecutable
             return null;
         }
 
-        public async Task<Station> GetStationClosestToLocalisation(Task<Adress> localisation)
+        public async Task<Station> GetStationClosestToLocalisation(Task<Adress> localisation, string DorA)
         {
 
             try
@@ -304,7 +305,7 @@ namespace ServeurBikingExecutable
                 //string responseBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
                 //Contract[] contract = JsonSerializer.Deserialize<Contract[]>(responseBody);
                 string chosenContract = localisation.Result.features[0].properties.locality.ToLower();
-                string responseContractBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v3/stations?contract=" + chosenContract + "&apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+                string responseContractBody = proxy.getAllStationsOfAContract(chosenContract);
                 Station[] stationsOfaCity = JsonSerializer.Deserialize<Station[]>(responseContractBody);
 
                 GeoCoordinate geoCoordinateOfLocalisation = new GeoCoordinate(localisation.Result.GetPosition().getLatitude(), localisation.Result.GetPosition().getLongitude());
@@ -313,15 +314,18 @@ namespace ServeurBikingExecutable
 
                 foreach (Station station in stationsOfaCity)
                 {
-                    GeoCoordinate geoCoordinateOfTheStation = new GeoCoordinate(station.position.latitude, station.position.longitude);
-                    if (distance > geoCoordinateOfLocalisation.GetDistanceTo(geoCoordinateOfTheStation))
+                    if ((String.Equals("departure", DorA) && station.available_bikes > 0) || (String.Equals("arrival", DorA) && station.available_bike_stands > 0))
                     {
-                        distance = geoCoordinateOfLocalisation.GetDistanceTo(geoCoordinateOfTheStation);
-                        numberproche = station.number;
+                        GeoCoordinate geoCoordinateOfTheStation = new GeoCoordinate(station.position.latitude, station.position.longitude);
+                        if (distance > geoCoordinateOfLocalisation.GetDistanceTo(geoCoordinateOfTheStation))
+                        {
+                            distance = geoCoordinateOfLocalisation.GetDistanceTo(geoCoordinateOfTheStation);
+                            numberproche = station.number;
+                        }
                     }
                 }
 
-                string responseStationProcheBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v3/stations/" + numberproche + "?contract=" + chosenContract + "&apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+                string responseStationProcheBody = proxy.getStation(numberproche, chosenContract);
 
                 Station stationProche = JsonSerializer.Deserialize<Station>(responseStationProcheBody);
 
