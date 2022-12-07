@@ -12,7 +12,7 @@
 ## Lancement
 :warning: Vous devez ouvrir les solutions et générer les exécutables.   
 :warning: activemq doit être dans les variables d'environnement.   
-Lancez l'exécutable launch et entrez votre adresse de départ puis votre adresse d'arrivée (attention à ne pas écrire les accents).
-
+Lancez l'exécutable launch et entrez votre adresse de départ puis votre adresse d'arrivée (attention à ne pas écrire les accents).   
+Dans le cas où ça ne fonctionnerait double cliquez sur les .exe générés (dans les .bin/.debug des solutions correspondantes) puis ouvrez dans votre IDE préféré le client Java et lancez le main.
 
 
