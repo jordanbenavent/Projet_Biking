@@ -6,7 +6,7 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using System.Json;
-
+using System.Diagnostics;
 
 namespace ProxySOAP
 {

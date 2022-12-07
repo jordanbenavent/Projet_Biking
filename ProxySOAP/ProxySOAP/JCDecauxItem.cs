@@ -44,5 +44,10 @@ namespace ProxySOAP
         {
             return allStationsOfAContract;
         }
+
+        public string getContract()
+        {
+            return contractSelected;
+        }
     }
 }
