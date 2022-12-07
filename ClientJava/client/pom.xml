@@ -58,6 +58,31 @@
           <sourceDestDir>src/main/java</sourceDestDir>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>Main</mainClass> <!-- CHANGE ME -->
+          <!--          <arguments>
+                      <argument>argument1</argument>
+                    </arguments>
+                    <systemProperties>
+                      <systemProperty>
+                        <key>myproperty</key>
+                        <value>myvalue</value>
+                      </systemProperty>
+                    </systemProperties>
+          -->
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

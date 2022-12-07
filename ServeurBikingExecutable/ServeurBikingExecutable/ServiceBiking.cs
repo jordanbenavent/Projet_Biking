@@ -20,9 +20,9 @@ namespace ServeurBikingExecutable
     public class Adress
     {
 
-        /*public string path { get; set; }
+        public string path { get; set; }
         public string city { get; set; }
-        public string postalCode { get; set; }*/
+        public string postalCode { get; set; }
 
         public List<Feature> features { get; set; }
 
@@ -85,8 +85,8 @@ namespace ServeurBikingExecutable
         public static List<MQ> ListOfQueues = new List<MQ>();
         public string nomQueueStandard = "QueueServiceBiking";
         public static int nbQueue = 0;
-        private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
-        //private string apiKeyORS = "api_key=5b3ce3597851110001cf62485cbfe0ea6a384b7c84c5fb1cdf8fc5a4";
+        //private string apiKeyORS = "api_key=5b3ce3597851110001cf6248560a9124ee2b4b0591d9dcdaf3179440";
+        private string apiKeyORS = "api_key=5b3ce3597851110001cf62485cbfe0ea6a384b7c84c5fb1cdf8fc5a4";
 
 
         public string getRoute(string departure, string arrival)
@@ -95,16 +95,41 @@ namespace ServeurBikingExecutable
             Task<Adress> arrivalAdress = getAdress(arrival);
             if (departAdress.Result==null || departAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse de depart."; }
             if (arrivalAdress.Result.Is_Empty()) { return "Une erreur est survenue sur l'adresse d'arrivée."; }
+
+            if(!isPossible(departAdress.Result, arrivalAdress.Result).Result)
+            {
+                return "Trajet Impossible, vous devez rester dans la même ville";
+            }
+
             Task<Station> departStation = GetStationClosestToLocalisation(departAdress);
             Task<Station> arrivalStation = GetStationClosestToLocalisation(arrivalAdress);
+
 
             Position positionDepartStation = getPosisitionOfStation(departStation.Result);
             Position positionArrivalStation = getPosisitionOfStation(arrivalStation.Result);
 
             List<Routing> routing = calculateAllRounting(departAdress.Result, arrivalAdress.Result, positionDepartStation, positionArrivalStation);
             string directions = getDirections(routing, departStation.Result, arrivalStation.Result);
-            Console.Write(directions);
+            Console.WriteLine(departAdress.Result.path + arrivalAdress.Result.path);
             return directions;
+        }
+
+        private async Task<bool> isPossible(Adress departAdress, Adress arrivalAdress)
+        {
+            string responseBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+            Contract[] contracts = JsonSerializer.Deserialize<Contract[]>(responseBody);
+            if (!arrivalAdress.features[0].properties.locality.ToLower().Equals(departAdress.features[0].properties.locality.ToLower()))
+            {
+                return false;
+            }
+            foreach(Contract contract in contracts)
+            {
+                if (contract.name.ToLower().Equals(departAdress.GetCity().ToLower()))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private List<Routing> calculateAllRounting(Adress departAdress, Adress arrivalAdress, Position positionDepartStation, Position positionArrivalStation)
@@ -159,10 +184,7 @@ namespace ServeurBikingExecutable
             {
                 return false;
             }
-            if (userQueue.needRecalculateRouting())
-            {
-                recalculateRouting(userQueue);
-            }
+            Console.WriteLine("on va push");
             userQueue.PushOnQueue();
             return true;
 
@@ -244,6 +266,7 @@ namespace ServeurBikingExecutable
                 //queue.stepsWalkingDeparture = result[0].features[0].properties.segments[0].steps;
                 //queue.stepsBiking = result[1].features[0].properties.segments[0].steps;
                 //queue.stepsWalkingArrival = result[2].features[0].properties.segments[0].steps;
+                Console.WriteLine(queue == null);
             }
             else
             {
@@ -278,9 +301,9 @@ namespace ServeurBikingExecutable
 
             try
             {
-                string responseBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
-                Contract[] contract = JsonSerializer.Deserialize<Contract[]>(responseBody);
-                string chosenContract = chooseContract(localisation, contract);
+                //string responseBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
+                //Contract[] contract = JsonSerializer.Deserialize<Contract[]>(responseBody);
+                string chosenContract = localisation.Result.features[0].properties.locality.ToLower();
                 string responseContractBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v3/stations?contract=" + chosenContract + "&apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
                 Station[] stationsOfaCity = JsonSerializer.Deserialize<Station[]>(responseContractBody);
 

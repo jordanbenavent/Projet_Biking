@@ -16,25 +16,30 @@ public class Client implements javax.jms.MessageListener{
     private static final long DELAY = 100;
 
     public synchronized void lauch(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Saisissez adresse de départ");
-        String departure = scanner.nextLine();
-        System.out.println("Saisissez adresse de arrivée");
-        String arrival = scanner.nextLine();
-        ServiceBiking serviceBiking = new ServiceBiking();
-        String queue = serviceBiking.getBasicHttpBindingIServiceBiking().getRoute(departure,arrival);
-        System.out.println(queue);
-        configurer(queue);
+        while(true) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Saisissez adresse de départ");
+            String departure = scanner.nextLine();
+            System.out.println("Saisissez adresse de arrivée");
+            String arrival = scanner.nextLine();
+            ServiceBiking serviceBiking = new ServiceBiking();
+            String queue = serviceBiking.getBasicHttpBindingIServiceBiking().getRoute(departure, arrival);
 
-        while(serviceBiking.getBasicHttpBindingIServiceBiking().nextStep(queue)){
-            //recuperation des infos
-            try {
-                wait(1500);
-            } catch (Exception e) {
-                System.out.println("Error wait");
+            if (!queue.equals("Trajet Impossible, vous devez rester dans la même ville")) {
+                configurer(queue);
+
+                while (serviceBiking.getBasicHttpBindingIServiceBiking().nextStep(queue)) {
+                    //recuperation des infos
+                    try {
+                        wait(1500);
+                    } catch (Exception e) {
+                        System.out.println("Error wait");
+                    }
+                }
             }
+            System.out.println(queue);
         }
-        System.out.println(queue);
+
     }
 
 

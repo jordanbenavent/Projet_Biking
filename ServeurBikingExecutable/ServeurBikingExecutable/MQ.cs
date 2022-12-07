@@ -63,7 +63,6 @@ namespace ServeurBikingExecutable
 
         public bool PushOnQueue()
         {
-
             try
             {
                 Uri connecturi = new Uri("activemq:tcp://localhost:61616");
