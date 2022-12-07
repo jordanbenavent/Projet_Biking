@@ -142,12 +142,6 @@ namespace ServeurBikingExecutable
             Task<Routing> routingbiking = getRouting(positionDepartStation, positionArrivalStation, "cycling-road?");
             // Itinéraire n°3, station d'arrivée - arrivée
             Task<Routing> routingwalkingarrival = getRouting(positionArrivalStation, arrivalAdress.features[0].geometry, "foot-walking?");
-            /*
-            if (routingwalkingonly.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : départ - arrivée à pied"; }
-            if (routingwalkingdepart.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : départ - station de départ"; }
-            if (routingbiking.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : station de départ - station d'arrivée"; }
-            if (routingwalkingarrival.Result == null) { return "Une erreur est survenue dans la création de l'itinéraire : station d'arrivée - arrivée"; }
-            */
             //possible autre routing
             double durationJCDecaux = routingwalkingdepart.Result.features[0].properties.segments[0].duration
                             + routingbiking.Result.features[0].properties.segments[0].duration
@@ -169,7 +163,6 @@ namespace ServeurBikingExecutable
 
         private Position getPosisitionOfStation(Station stationProche)
         {
-
             // conversion positionJCDecaux -> position
             Position pos = new Position();
             pos.coordinates = new double[] { stationProche.position.longitude, stationProche.position.latitude };
@@ -185,7 +178,6 @@ namespace ServeurBikingExecutable
             {
                 return false;
             }
-            Console.WriteLine("on va push");
             userQueue.PushOnQueue();
             return true;
 
@@ -260,14 +252,10 @@ namespace ServeurBikingExecutable
             {
                 allSteps.AddRange(result[i].features[0].properties.segments[0].steps);
             }
-            MQ queue; //= new MQ(nomQueueStandard + nbQueue, allSteps);
+            MQ queue; 
             if (result.Count == 3)
             {
                 queue = new MQ(nomQueueStandard + nbQueue, result[0], result[1], result[2], departure, arrival);
-                //queue.stepsWalkingDeparture = result[0].features[0].properties.segments[0].steps;
-                //queue.stepsBiking = result[1].features[0].properties.segments[0].steps;
-                //queue.stepsWalkingArrival = result[2].features[0].properties.segments[0].steps;
-                Console.WriteLine(queue == null);
             }
             else
             {
@@ -279,31 +267,11 @@ namespace ServeurBikingExecutable
             return ListOfQueues[ListOfQueues.Count - 1].nomQueue;
         }
 
-        public async Task<Place> getAdressV2(string adress)
-        {
-            try
-            {
-                HttpResponseMessage responseContract = await client.GetAsync("https://nominatim.openstreetmap.org/search?q=" + adress + "&format=json&polygon=1&addressdetails=1");
-                Console.WriteLine(responseContract);
-                responseContract.EnsureSuccessStatusCode();
-                string responseBody = await responseContract.Content.ReadAsStringAsync();
-                Place result = JsonSerializer.Deserialize<Place>(responseBody);
-                return result;
-            }
-            catch (Exception e)
-            {
-
-            }
-            return null;
-        }
-
         public async Task<Station> GetStationClosestToLocalisation(Task<Adress> localisation, string DorA)
         {
 
             try
             {
-                //string responseBody = await client.GetStringAsync("https://api.jcdecaux.com/vls/v1/contracts?apiKey=98382454fc46549c5cdf105c9dcf4578e6cbea91");
-                //Contract[] contract = JsonSerializer.Deserialize<Contract[]>(responseBody);
                 string chosenContract = localisation.Result.features[0].properties.locality.ToLower();
                 string responseContractBody = proxy.getAllStationsOfAContract(chosenContract);
                 Station[] stationsOfaCity = JsonSerializer.Deserialize<Station[]>(responseContractBody);
@@ -377,45 +345,7 @@ namespace ServeurBikingExecutable
 
             return chosenContract;
         }
-        
 
-        private void recalculateRouting(MQ userQueue)
-        {
-            if (userQueue.status.Equals(StatusRouting.WALKING))
-            {
-                this.recalculateAllRounting(userQueue);
-            }
-            else if (userQueue.status.Equals(StatusRouting.BIKING))
-            {
-                recalculateBikingRounting(userQueue);
-            }
-            //plus nécessaire de recalculer, l'utilisateur est à pied et proche du point d'arriver (discuter avec le prof)
-        }
-
-        private static void recalculateBikingRounting(MQ userQueue)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void recalculateAllRounting(MQ userQueue)
-        {
-            //Task<Adress> adressDepart = userQueue.stepsWalkingDeparture[userQueue.lastPushWalkingDeparture].
-            //List<Routing> routing = calculateAllRounting();
-        }
-
-        private Position posisitonFromRouting(Routing routing, int numStep, int point)
-        {
-            Position position = new Position();
-            int userPoint = routing.features[0].properties.segments[0].steps[numStep].way_points[point];
-            //routing.features[0].geometry.coordinates[userPoint];
-            return position;
-        }
     }
-
-
-
-
-
-
 
 }

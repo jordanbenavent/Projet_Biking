@@ -36,10 +36,10 @@ public class Client implements javax.jms.MessageListener{
                         System.out.println("Error wait");
                     }
                 }
+                continue;
             }
             System.out.println(queue);
         }
-
     }
 
 

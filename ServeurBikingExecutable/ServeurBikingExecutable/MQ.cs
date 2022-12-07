@@ -85,20 +85,13 @@ namespace ServeurBikingExecutable
                 producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
 
                 // Finally, to send messages:
-                /*
-                foreach(string instruction in instructions)
-                {
-                    ITextMessage message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
-                    producer.Send(message);
-                }*/
+                
                 ITextMessage message = getMessage(session);
-                //message = session.CreateTextMessage(steps[lastPush].id + " : " + steps[lastPush].instruction);
                 producer.Send(message);
                 nbStep++;
 
 
-                Console.WriteLine("Message sent, check ActiveMQ web interface to confirm.");
-                //Console.ReadLine();
+                Console.WriteLine("Message sent on queue " + nomQueue);
 
 
                 // Don't forget to close your session and connection when finished.

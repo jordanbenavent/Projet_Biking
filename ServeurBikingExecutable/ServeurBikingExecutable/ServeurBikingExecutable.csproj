@@ -99,7 +99,6 @@
     </Compile>
     <Compile Include="IServiceBiking.cs" />
     <Compile Include="MQ.cs" />
-    <Compile Include="Place.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="PositionJCDecaux.cs" />
     <Compile Include="Program.cs" />
