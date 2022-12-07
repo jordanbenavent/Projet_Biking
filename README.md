@@ -1,1 +1,13 @@
-# Projet_Biking
+# Let's go biking !
+
+## Membres du groupe :
+* Jordan Benavent
+* Louis Hattiger
+
+## Contenu du projet
+* Un Serveur de Routing
+* Un Proxy/Cache
+* Un Client Java
+
+## Lancement
+Lancez l'exécutable et entrez votre adresse de départ puis votre adresse d'arrivée (attention à ne pas écrire les accents)
